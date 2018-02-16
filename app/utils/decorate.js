@@ -2,30 +2,33 @@ const isClass = source =>
     typeof source === 'function' 
         && /^\s*class\s+/.test(source.toString());
 
+const decorateInstance = (target, decorators, property) => {
 
-const decorateInstance = (target, handler, propertyName) => {
-
-    const original = target[propertyName].bind(target);
-    target[propertyName] = (...args) => 
-        handler[propertyName](original, propertyName, args);    
-    
+    decorators.forEach(decorator => {
+        const method = target[property].bind(target);
+        target[property] = (...args) => 
+        decorator(method, property, args);    
+    });
 };
 
-const decorateClass = (target, handler, propertyName) => {
+const decorateClass = (target, decorators, property) => {
 
-    const original = target.prototype[propertyName];
-    target.prototype[propertyName] = function (...args) {
-        return handler[propertyName](original.bind(this), propertyName, args);
-    };  
+    decorators.forEach(decorator => {
+        const method = target.prototype[property];
+        target.prototype[property] = function (...args) {
+            return decorator(method.bind(this), property, args);
+        };  
+    });
 };
 
 export const decorate = (target, handler) => {
 
     const isClazz = isClass(target);
 
-    Object.keys(handler).forEach(
-        propertyName => isClazz 
-            ? decorateClass(target, handler, propertyName)
-            : decorateInstance(target, handler, propertyName)
-    );
+    Object.keys(handler).forEach(property => {
+        const decorators = handler[property].reverse();
+        isClazz 
+            ? decorateClass(target, decorators, property)
+            : decorateInstance(target, decorators, property)
+    });    
 };
