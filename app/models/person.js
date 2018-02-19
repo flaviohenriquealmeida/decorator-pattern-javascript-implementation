@@ -6,7 +6,7 @@ export class Person {
     }
 
     speak(phrase) {
-        console.log(phrase);
+        return `${this._name} is speaking... ${phrase}`
     }
 
     getFullName() {
