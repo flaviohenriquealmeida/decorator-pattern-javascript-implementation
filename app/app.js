@@ -3,7 +3,8 @@ import { decorate } from './utils/decorate.js';
 import { logarTempoDeExecucao, logarMetodo } from './models/decorators.js';
 
 decorate(Person, {
-    speak: [logarMetodo({ retorno: true }), logarTempoDeExecucao]
+    speak: [logarMetodo({ retorno: false }), logarTempoDeExecucao],
+    getFullName: [logarTempoDeExecucao]
 });
 
 const person = new Person('Flávio', 'Almeida');
