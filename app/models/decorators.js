@@ -1,4 +1,4 @@
-export const logarTempoDeExecucao = (method, property, args) => {
+export const logExecutionTime = (method, property, args) => {
     
     console.time(property);
     const result = method(...args);
@@ -6,10 +6,11 @@ export const logarTempoDeExecucao = (method, property, args) => {
     return result;
 };
 
-export const logarMetodo = ({ retorno }) => (method, property, args) => {
-    console.log(`Método decorado: ${property}`);
-    console.log(`Argumentos do método ${args}`);
-    const result = method(...args);
-    if(retorno) console.log(`resultado do método: ${result}`)
-    return result;
-};
+export const inspectMethod = ({ excludeReturn } = {}) => 
+    (method, property, args) => {
+        console.log(`Método decorado: ${property}`);
+        console.log(`Argumentos do método ${args}`);
+        const result = method(...args);
+        if(!excludeReturn) console.log(`resultado do método: ${result}`)
+        return result;
+    };

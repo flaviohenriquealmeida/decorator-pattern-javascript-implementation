@@ -1,10 +1,10 @@
 import { Person } from './models/person.js';
 import { decorate } from './utils/decorate.js';
-import { logarTempoDeExecucao, logarMetodo } from './models/decorators.js';
+import { logExecutionTime, inspectMethod } from './models/decorators.js';
 
 decorate(Person, {
-    speak: [logarMetodo({ retorno: false }), logarTempoDeExecucao],
-    getFullName: [logarTempoDeExecucao]
+    speak: [inspectMethod({ excludeReturn: true }), logExecutionTime],
+    getFullName: [logExecutionTime]
 });
 
 const person = new Person('Flávio', 'Almeida');
